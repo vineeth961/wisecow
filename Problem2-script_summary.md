@@ -41,5 +41,3 @@ Logs the output to app_status.log.
 OUTPUT:
 
 Added the screenshot of the output in the scripts folder.
-
-Application is UP
