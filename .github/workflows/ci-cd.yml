@@ -1,17 +1,16 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
-# Trigger workflow on push to main branch
 on:
   push:
     branches:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -27,24 +26,11 @@ jobs:
           username: ${{ secrets.GHCR_USER }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      # Step 4: Build and push the Docker image
+      # Step 4: Build and push Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: ghcr.io/${{ secrets.GHCR_USER }}/wisecow-app:latest
-
-      # Step 5: Set up kubeconfig
-      - name: Set up kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-          export KUBECONFIG=$(pwd)/kubeconfig.yaml
-
-      # Step 6: Deploy to Kubernetes
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/wisecow-deployment.yaml
-          kubectl apply -f k8s/wisecow-service.yaml
-
 
