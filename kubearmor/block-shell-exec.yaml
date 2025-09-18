@@ -1,0 +1,18 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: block-shell-exec
+  namespace: default
+spec:
+  severity: 5
+  message: "Blocking shell access inside wisecow pod"
+  selector:
+    matchLabels:
+      app: wisecow
+  process:
+    matchPaths:
+      - path: /bin/sh
+      - path: /bin/bash
+  action:
+    Block
+
